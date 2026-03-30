@@ -1,0 +1,6 @@
+streamlit
+anthropic
+numpy-financial
+fpdf2
+pdfplumber
+pandas
