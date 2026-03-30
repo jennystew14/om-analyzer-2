@@ -36,7 +36,7 @@ st.markdown("""
   .header-bar p  { color: #a8c4e0 !important; margin: 0.2rem 0 0; font-size: 0.85rem; }
 
   .verdict-pass  { background: #d4edda; border-left: 5px solid #28a745; padding: 1rem 1.2rem; border-radius: 6px; }
-  .verdict-watch { background: #fff3cd; border-left: 5px solid #ffc107; padding: 1rem 1.2rem; border-radius: 6px; }
+  .verdict-watch { background: #fff3cd; border-left: 5px solid #ffc107; padding: 1rem 1.2rem; border-radius: 6px; color: #333 !important; }
   .verdict-pass  { background: #d4edda; border-left: 5px solid #28a745; padding: 1rem 1.2rem; border-radius: 6px; }
   .verdict-fail  { background: #f8d7da; border-left: 5px solid #dc3545; padding: 1rem 1.2rem; border-radius: 6px; }
 
