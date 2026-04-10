@@ -484,6 +484,7 @@ def generate_pdf_memo(d, models, overrides):
         pdf.set_font("Helvetica", "", 8)
         pdf.set_text_color(*color)
         pdf.multi_cell(168, 4.5, clean(f"{flag}  {text}"))
+        pdf.set_x(16)
         pdf.set_text_color(0, 0, 0)
 
     # ── KEY METRICS ──
@@ -638,23 +639,27 @@ def generate_pdf_memo(d, models, overrides):
 
     # ── VERDICT / DILIGENCE ──
     section("Verdict & Next Steps")
+    pdf.set_x(16)
     pdf.set_font("Helvetica", "B", 8)
-    pdf.cell(0, 5, clean(f"Recommendation: {verdict.get('recommendation','')}  (Confidence: {verdict.get('confidence','')})"), ln=True)
+    pdf.cell(178, 5, clean(f"Recommendation: {verdict.get('recommendation','')}  (Confidence: {verdict.get('confidence','')})"), ln=True)
     pdf.ln(1)
     if verdict.get("key_positives"):
-        pdf.set_font("Helvetica", "B", 8); pdf.cell(0, 5, "Positives:", ln=True)
+        pdf.set_x(16); pdf.set_font("Helvetica", "B", 8); pdf.cell(178, 5, "Positives:", ln=True)
         for item in verdict.get("key_positives", []):
             bullet(item, "+", (40, 167, 69))
+        pdf.ln(1)
     if verdict.get("key_concerns"):
-        pdf.set_font("Helvetica", "B", 8); pdf.cell(0, 5, "Concerns:", ln=True)
+        pdf.set_x(16); pdf.set_font("Helvetica", "B", 8); pdf.cell(178, 5, "Concerns:", ln=True)
         for item in verdict.get("key_concerns", []):
             bullet(item, "!", (200, 120, 0))
+        pdf.ln(1)
     if verdict.get("red_flags"):
-        pdf.set_font("Helvetica", "B", 8); pdf.cell(0, 5, "Red Flags:", ln=True)
+        pdf.set_x(16); pdf.set_font("Helvetica", "B", 8); pdf.cell(178, 5, "Red Flags:", ln=True)
         for item in verdict.get("red_flags", []):
             bullet(item, "X", (220, 53, 69))
+        pdf.ln(1)
     if verdict.get("further_diligence"):
-        pdf.set_font("Helvetica", "B", 8); pdf.cell(0, 5, "Further Diligence:", ln=True)
+        pdf.set_x(16); pdf.set_font("Helvetica", "B", 8); pdf.cell(178, 5, "Further Diligence:", ln=True)
         for item in verdict.get("further_diligence", []):
             bullet(item, "->", (30, 100, 170))
 
