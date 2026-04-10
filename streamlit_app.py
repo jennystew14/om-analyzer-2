@@ -35,10 +35,10 @@ st.markdown("""
   .header-bar h1 { color: white !important; margin: 0; font-size: 1.6rem; font-weight: 700; }
   .header-bar p  { color: #a8c4e0 !important; margin: 0.2rem 0 0; font-size: 0.85rem; }
 
-  .verdict-pass  { background: #d4edda; border-left: 5px solid #28a745; padding: 1rem 1.2rem; border-radius: 6px; }
-  .verdict-watch { background: #fff3cd; border-left: 5px solid #ffc107; padding: 1rem 1.2rem; border-radius: 6px; }
-  .verdict-pass  { background: #d4edda; border-left: 5px solid #28a745; padding: 1rem 1.2rem; border-radius: 6px; }
-  .verdict-fail  { background: #f8d7da; border-left: 5px solid #dc3545; padding: 1rem 1.2rem; border-radius: 6px; }
+  .verdict-pass  { background: #d4edda; border-left: 5px solid #28a745; padding: 1rem 1.2rem; border-radius: 6px; color: #155724 !important; }
+  .verdict-watch { background: #fff3cd; border-left: 5px solid #ffc107; padding: 1rem 1.2rem; border-radius: 6px; color: #333 !important; }
+  .verdict-pass  { background: #d4edda; border-left: 5px solid #28a745; padding: 1rem 1.2rem; border-radius: 6px; color: #155724 !important; }
+  .verdict-fail  { background: #f8d7da; border-left: 5px solid #dc3545; padding: 1rem 1.2rem; border-radius: 6px; color: #721c24 !important; }
 
   .kpi-card {
     background: white;
@@ -766,11 +766,17 @@ else:
     rec     = str(verdict.get("recommendation","")).upper().strip()
 
     # ── VERDICT BANNER ──
-    css_cls = {"PROCEED": "verdict-pass", "WATCH": "verdict-watch", "PASS": "verdict-fail"}.get(rec, "verdict-watch")
+    color_map = {
+        "PROCEED": ("d4edda", "28a745", "155724"),
+        "WATCH":   ("fff3cd", "ffc107", "333333"),
+        "PASS":    ("f8d7da", "dc3545", "721c24"),
+    }
+    bg_hex, border_hex, text_hex = color_map.get(rec, ("f0f0f0", "aaaaaa", "333333"))
     st.markdown(f"""
-    <div class="{css_cls}">
-      <strong>VERDICT: {rec}</strong> &nbsp;·&nbsp; {verdict.get('one_liner','')}
-      <span style="float:right;font-size:0.8rem;opacity:0.7">Confidence: {verdict.get('confidence','')}</span>
+    <div style="background:#{bg_hex};border-left:5px solid #{border_hex};padding:1rem 1.2rem;border-radius:6px;margin-bottom:1rem;">
+      <span style="color:#{text_hex};font-weight:700;">VERDICT: {rec}</span>
+      <span style="color:#{text_hex};">&nbsp;·&nbsp;{verdict.get('one_liner','')}</span>
+      <span style="float:right;font-size:0.8rem;color:#{text_hex};opacity:0.7;">Confidence: {verdict.get('confidence','')}</span>
     </div>
     """, unsafe_allow_html=True)
 
@@ -954,28 +960,25 @@ else:
 
     # ── TAB 5: FLAGS & DILIGENCE ──
     with tab5:
-        c1, c2 = st.columns(2)
-        with c1:
-            st.markdown("**✅ Key Positives**")
-            for item in verdict.get("key_positives", []):
-                st.markdown(f'<span class="flag-green">✓</span> {item}', unsafe_allow_html=True)
+        st.markdown("**✅ Key Positives**")
+        for item in verdict.get("key_positives", []):
+            st.markdown(f'<span class="flag-green">✓</span> {item}', unsafe_allow_html=True)
 
-            st.markdown("<br>**🔴 Red Flags**")
-            flags = verdict.get("red_flags", [])
-            if flags:
-                for f in flags:
-                    st.markdown(f'<span class="flag-red">✗</span> {f}', unsafe_allow_html=True)
-            else:
-                st.markdown("None identified.")
+        st.markdown("<br>**⚠️ Key Concerns**", unsafe_allow_html=True)
+        for item in verdict.get("key_concerns", []):
+            st.markdown(f'<span class="flag-amber">△</span> {item}', unsafe_allow_html=True)
 
-        with c2:
-            st.markdown("**⚠️ Key Concerns**")
-            for item in verdict.get("key_concerns", []):
-                st.markdown(f'<span class="flag-amber">△</span> {item}', unsafe_allow_html=True)
+        st.markdown("<br>**🔴 Red Flags**", unsafe_allow_html=True)
+        flags = verdict.get("red_flags", [])
+        if flags:
+            for f in flags:
+                st.markdown(f'<span class="flag-red">✗</span> {f}', unsafe_allow_html=True)
+        else:
+            st.markdown("None identified.")
 
-            st.markdown("<br>**→ Further Diligence Needed**")
-            for item in verdict.get("further_diligence", []):
-                st.markdown(f"→ {item}")
+        st.markdown("<br>**→ Further Diligence Needed**", unsafe_allow_html=True)
+        for item in verdict.get("further_diligence", []):
+            st.markdown(f"→ {item}")
 
     # ── PDF EXPORT ──
     st.markdown("---")
